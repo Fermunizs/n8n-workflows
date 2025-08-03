@@ -1,0 +1,1364 @@
+{
+  "name": "Teste - Pipedrive",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Teste - Pipedrive",
+        "formDescription": "Teste",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "placeholder": "Nome Completo",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "CNPJ",
+              "fieldType": "number",
+              "placeholder": "Apenas os números",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Empresa",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "placeholder": "Email de contato ou da Empresa",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Categoria",
+              "placeholder": "Adicione o seu nicho",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Tamanho da Empresa",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Autônomo"
+                  },
+                  {
+                    "option": "1 - 10 Funcionários"
+                  },
+                  {
+                    "option": "15 - 50 Funcionários"
+                  },
+                  {
+                    "option": "50 - 100 Funcionários"
+                  },
+                  {
+                    "option": "150 - 500 Funcionários"
+                  },
+                  {
+                    "option": "Mais de 500"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Produto",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Portfólio"
+                  },
+                  {
+                    "option": "E-commerce"
+                  },
+                  {
+                    "option": "LMS"
+                  },
+                  {
+                    "option": "Outro"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -576,
+        -304
+      ],
+      "id": "50b8b205-f1a8-4084-a279-f0184be1aed6",
+      "name": "On form submission",
+      "webhookId": "68a40e40-d7a6-42c5-8f51-310a73a3724a"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bd3a6691-02a1-4223-81ae-92182b4d7d32",
+              "name": "Id",
+              "value": "={{ $execution.id }}",
+              "type": "number"
+            },
+            {
+              "id": "cb29e18c-0508-498e-ae0b-b2507cf2b3b7",
+              "name": "Nome",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "39d73332-79f4-483e-b976-7f5143bbbb30",
+              "name": "Empresa",
+              "value": "={{ $json.Empresa }}",
+              "type": "string"
+            },
+            {
+              "id": "43f9cccb-8159-4572-9253-1dd15404ac7a",
+              "name": "Produto",
+              "value": "={{ $json.Produto }}",
+              "type": "string"
+            },
+            {
+              "id": "666cba3b-7fbe-481a-af12-ba8f65de3411",
+              "name": "Tamanho da Empresa",
+              "value": "={{ $json['Tamanho da Empresa'] }}",
+              "type": "string"
+            },
+            {
+              "id": "ab79b833-f0c2-43a1-8ac6-13563444523b",
+              "name": "Email",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            },
+            {
+              "id": "6c26e62b-3987-42a4-ae51-90bea44e6958",
+              "name": "CNPJ",
+              "value": "={{ $json.CNPJ }}",
+              "type": "string"
+            },
+            {
+              "id": "85248b77-8bcc-4b99-b3f9-83edee831867",
+              "name": "Categoria",
+              "value": "={{ $('On form submission').item.json.Categoria }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -352,
+        -304
+      ],
+      "id": "ea2036e3-4fc0-4ed0-9034-ddce43d2f22c",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "title": "={{ $('Edit Fields').item.json.Empresa }}",
+        "org_id": "={{ $('Id_organization').item.json.id }}",
+        "additionalFields": {
+          "label": "={{ $('Edit Fields').item.json.Nome }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        1616,
+        48
+      ],
+      "id": "9243ab5b-5978-4402-be8a-9ad3828f0f6f",
+      "name": "Create a deal",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "Pued9g5BxINqIZjZ",
+          "name": "Pipedrive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "munizsilvestrefernanda@gmail.com",
+        "subject": "Uhuuu ! Você ganhou um novo negócio!  ",
+        "message": "=<h2>📣 Novo cliente na área!</h2>\n\n<p>Olá equipe,</p>\n\n<p>É hora de esquentar os bolsos porque tem cliente novo chegando!</p>\n\n<p><strong>Dê boas-vindas à {{ $('Edit Fields').item.json.Empresa }}!</strong></p>\n\n<hr>\n\n<p><strong>📝 Informações do cliente:</strong></p>\n\n<ul>\n  <li><strong>Cliente:</strong> {{ $('Edit Fields').item.json.Nome }}</li>\n  <li><strong>Empresa:</strong> {{ $('Edit Fields').item.json.Empresa }}</li>\n  <li><strong>Tamanho da empresa:</strong>{{ $('Edit Fields').item.json['Tamanho da Empresa'] }} </li>\n  <li><strong>Produto solicitado:</strong> {{ $('Edit Fields').item.json.Produto }}</li>\n</ul>\n\n<hr>\n\n<p>Vamos garantir uma recepção calorosa e um atendimento impecável!</p>\n\n<p>Atenciosamente,<br>\n<strong>Equipe Comercial</strong></p>\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2288,
+        48
+      ],
+      "id": "92e2cb11-4682-4a3b-b361-5d5f4b2f47ab",
+      "name": "Send a message",
+      "webhookId": "889178d7-30e1-4797-b342-577fb8f24b2c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "KWNADafmgu5p8957",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bbb5569c-55b2-4575-84c1-1cf424edb3df",
+              "name": "Id",
+              "value": "={{ $('Create a deal').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "f2086ef4-c938-48a2-a083-e18a880da72e",
+              "name": "Nome",
+              "value": "={{ $('Edit Fields').item.json.Nome }}",
+              "type": "string"
+            },
+            {
+              "id": "f4e3acb9-1b91-490d-9115-141c59231a45",
+              "name": "E-mail",
+              "value": "={{ $('Create a deal').item.json.user_id.email }}",
+              "type": "string"
+            },
+            {
+              "id": "5221b155-3bb3-4feb-a771-bfe056858304",
+              "name": "Empresa",
+              "value": "={{ $('Edit Fields').item.json.Empresa }}",
+              "type": "string"
+            },
+            {
+              "id": "41db4f80-aa97-4cd3-942d-1590309adc82",
+              "name": "Produto",
+              "value": "={{ $('Edit Fields').item.json.Produto }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2064,
+        48
+      ],
+      "id": "2064486a-d4ce-4ed6-87de-93d5cf87411d",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1m32h1bMYP-kHCM8SUofPBEx7nS_zNdySiGUskFAu8CU/edit?gid=2097810463#gid=2097810463",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1m32h1bMYP-kHCM8SUofPBEx7nS_zNdySiGUskFAu8CU/edit?gid=2097810463#gid=2097810463",
+          "mode": "url"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Id": "={{ $('Create a deal').item.json.id }}",
+            "Empresa": "={{ $('Edit Fields').item.json.Empresa }}",
+            "Nome": "={{ $('Edit Fields').item.json.Nome }}",
+            "Email": "={{ $('Edit Fields').item.json.Email}}",
+            "Produto": "={{ $('Edit Fields').item.json.Produto }}",
+            "Tamanho da Empresa": "={{ $('Edit Fields').item.json['Tamanho da Empresa'] }}"
+          },
+          "matchingColumns": [
+            "Id"
+          ],
+          "schema": [
+            {
+              "id": "Id",
+              "displayName": "Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Empresa",
+              "displayName": "Empresa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nome",
+              "displayName": "Nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Produto",
+              "displayName": "Produto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tamanho da Empresa",
+              "displayName": "Tamanho da Empresa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1840,
+        48
+      ],
+      "id": "a7574e8e-cfaa-469d-b8c6-a2599de0e2a5",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2coxp1Taf9xCqhct",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "30177372-5bc6-4cf0-8405-57b995721ea5",
+              "leftValue": "={{ $('Edit Fields').item.json.Produto }}",
+              "rightValue": "Outro",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "6543d85d-daf4-4626-bd73-65d246bd7c0e",
+              "leftValue": "={{ $('Edit Fields').item.json['Tamanho da Empresa'] }}",
+              "rightValue": "Autônomo",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1216,
+        -144
+      ],
+      "id": "8f1672b2-36cd-4df2-bc07-d1af3910a4ba",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1m32h1bMYP-kHCM8SUofPBEx7nS_zNdySiGUskFAu8CU/edit?gid=556549509#gid=556549509",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1m32h1bMYP-kHCM8SUofPBEx7nS_zNdySiGUskFAu8CU/edit?gid=556549509#gid=556549509",
+          "mode": "url"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Id": "={{ $('Id_organization').item.json.id}}",
+            "Empresa": "={{ $('Edit Fields').item.json.Empresa }}",
+            "Nome": "={{ $('Edit Fields').item.json.Nome }}",
+            "Email": "={{ $('Edit Fields').item.json.Email}}",
+            "Produto": "={{ $('Edit Fields').item.json.Produto }}",
+            "Tamanho da Empresa": "={{ $('Edit Fields').item.json['Tamanho da Empresa'] }}"
+          },
+          "matchingColumns": [
+            "Id"
+          ],
+          "schema": [
+            {
+              "id": "Id",
+              "displayName": "Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Empresa",
+              "displayName": "Empresa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nome",
+              "displayName": "Nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Produto",
+              "displayName": "Produto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tamanho da Empresa",
+              "displayName": "Tamanho da Empresa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1856,
+        -352
+      ],
+      "id": "97d2f298-89c4-40b1-96dd-4cb4a429d329",
+      "name": "Append or update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2coxp1Taf9xCqhct",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "lead",
+        "title": "=Lead {{ $('Edit Fields').item.json.Empresa }}",
+        "organization_id": "={{ $json.id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        624,
+        -144
+      ],
+      "id": "e636173a-58a0-45d7-8da3-4a8b7ac21b19",
+      "name": "Create a lead",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "Pued9g5BxINqIZjZ",
+          "name": "Pipedrive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "organization",
+        "name": "={{ $('Edit Fields').item.json.Empresa }}",
+        "additionalFields": {
+          "customProperties": {
+            "property": [
+              {
+                "name": "owner_id",
+                "value": "={{ $('Edit Fields').item.json.Nome }}"
+              },
+              {
+                "name": "05c756d5599fdfa77a1ef7bde7ed5481089761e4",
+                "value": "={{ $('Edit Fields').item.json['Tamanho da Empresa'] }}"
+              },
+              {
+                "name": "a304501057f3535c55b78feb26cb267097e68dfa",
+                "value": "={{ $('Edit Fields').item.json.CPF }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        432,
+        -144
+      ],
+      "id": "f3799b5f-824b-402b-b22a-58732f4b8c03",
+      "name": "Create an organization",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "Pued9g5BxINqIZjZ",
+          "name": "Pipedrive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "munizsilvestrefernanda@gmail.com",
+        "subject": "=Lead Desqualificado {{ $json.Empresa }}",
+        "message": "=\n  <body>\n    <h2>Lead desqualificado (por enquanto 😅)</h2>\n    <p>Olá, time comercial!</p>\n    <p>Recebemos um lead que, pelo nosso filtro inicial, não aqueceu os bolsos nem acendeu o alerta 🔥... MAS isso não significa que não seja uma joia escondida 💎.</p>\n    <p>Agora é com vocês! Bora colocar a lupa e investigar se esse lead tem chance de ser qualificado no contato comercial. Aqui estão os dados:</p>\n    <ul>\n      <li><strong>Empresa:</strong> {{ $json.Empresa }}</li>\n      <li><strong>Nome do contato:</strong> {{ $json.Nome }}</li>\n      <li><strong>Email:</strong> {{ $json.Email }}</li>\n      <li><strong>Produto de interesse:</strong> {{ $json.Produto }}</li>\n      <li><strong>Tamanho da Empresa:</strong> {{ $json['Tamanho da Empresa'] }}</li>\n    </ul>\n    <p>Depois do papo com o lead, só responder por aqui se ele entrou para o time dos aquecidos 💥 ou continua no modo geladeira. 🧊</p>\n    <p>Contamos com vocês pra fazer essa mágica acontecer ✨<br>Equipe de Automação 🤖</p>\n  </body>\n\n",
+        "approvalOptions": {
+          "values": {
+            "approveLabel": "Qualificado"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2080,
+        -352
+      ],
+      "id": "5260573b-d1a2-49b4-90d3-f5b2cdb68dfb",
+      "name": "Send message and wait for response",
+      "webhookId": "776eba3f-17b5-4557-9345-70b536696682",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "KWNADafmgu5p8957",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ba7618e3-b8a6-479f-89ae-027a37db6cad",
+              "leftValue": "={{ $json.data }}",
+              "rightValue": "={{ $json.data.approved }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2304,
+        -352
+      ],
+      "id": "d69e612c-d657-46d1-867a-644b7c65eafe",
+      "name": "If1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2720,
+        -160
+      ],
+      "id": "3822b5ef-75c2-4721-9e67-5740830593ae",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "resource": "organization",
+        "operation": "search",
+        "limit": 1,
+        "term": "={{ $('Edit Fields').item.json.CNPJ}}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        -304
+      ],
+      "id": "8f0d1bfa-7853-4b0f-b855-919e93dfa19b",
+      "name": "Search an organization",
+      "alwaysOutputData": true,
+      "credentials": {
+        "pipedriveApi": {
+          "id": "Pued9g5BxINqIZjZ",
+          "name": "Pipedrive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "380dbbd0-7036-4ea9-83fb-19c2ef18c62d",
+              "leftValue": "={{ $('Edit Fields').item.json.CNPJ }}",
+              "rightValue": "={{ $('Search an organization').item.json.custom_fields[0] }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        96,
+        -304
+      ],
+      "id": "2362c714-cb86-4a90-bdd6-8438d1ef068b",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "content": "## Verifica de aquela organização já está cadastrada \n",
+        "height": 272,
+        "width": 432
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        -400
+      ],
+      "typeVersion": 1,
+      "id": "3273f3cf-91ad-4c60-af84-ba4122964b88",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "**Cadastra uma nova organização e um novo lead caso seja o primeiro contato**\n",
+        "height": 352,
+        "width": 608,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        368,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "a40d1056-c2fa-4223-9197-5874c4757ecf",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "**Verifica se o lead é qualificado ou não**",
+        "height": 352,
+        "width": 192,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1168,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "6a997c0a-3124-4edb-8ec4-265e0ae8dc54",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Qualificados",
+        "height": 288,
+        "width": 1104,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1504,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "08aae303-79a9-463f-8839-2d6b0a6d64dc",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Desqualificados",
+        "height": 336,
+        "width": 1104,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1504,
+        -448
+      ],
+      "typeVersion": 1,
+      "id": "00a1caf1-1d8f-415f-a2ec-6fd2b7450564",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Você é um redator digital da empresa \"Um nome super criativo\". Sua função é criar um e-mail personalizado de boas-vindas para cada novo lead utilizando as informações disponíveis (ex: nome, empresa, cargo, interesses, etc). \n\n⚠️ O conteúdo do e-mail deve ser gerado **OBRIGATORIAMENTE** utilizando **tags HTML válidas**, pronto para ser enviado como e-mail em formato HTML.\n\nSeja simpático, profissional e caloroso. Adapte o tom conforme o perfil do lead (mais formal para cargos executivos, mais descontraído para startups ou perfis criativos).\n\nExemplo de estrutura esperada:\n  <body>\n    <h1>Olá João!</h1>\n    <p>Seja muito bem-vindo à \"Um nome super criativo\". É um prazer ter você conosco.</p>\n    <p>Notamos que você atua como <strong>Gerente de Projetos</strong> na <em>Empresa X</em> — acreditamos que podemos contribuir bastante para seus desafios.</p>\n    <p>Vamos te ajudar a alcançar novos patamares 🚀</p>\n  </body>\n\n\nUse tags como `<h1>`, `<p>`, `<strong>`, `<em>`, e emojis quando apropriado. Evite linguagem genérica e traga um toque humano. Assine com uma frase carismática no final.\nEstas são as informações:\nnome:{{ $('Edit Fields').item.json.Nome }}\nempresa:{{ $('Edit Fields').item.json.Empresa }}\nproduto solicitado:{{ $('Edit Fields').item.json.Produto }}\nNicho: {{ $('Edit Fields').item.json.Categoria }}\n\nCaso o produto slocitado seja igual a 'Outro' você não deve mencionar o nome do produto ou falar outro no e-mai, É PROIBIDO FALAR 'Outro' no emai\n\nDepois você DEVE OBRIGATORIAMENTE E SEMPRE SEM EXECEÇÃO USAR A TOOL atividade e criar uma descrição detalhada do novo lead no pipedrive",
+        "needsFallback": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        2368,
+        400
+      ],
+      "id": "d68bc1be-4d39-4fc4-9b29-58219d6e86b9",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2176,
+        576
+      ],
+      "id": "931336d5-e85f-4702-a992-dcd26815f993",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "vUErq5rAXuuYAprE",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Edit Fields').item.json.Id }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        2464,
+        576
+      ],
+      "id": "e73cdd9f-5217-4787-93d8-e3bc3e07fd21",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        2736,
+        576
+      ],
+      "id": "e91a0e1f-bcf5-4b77-bb01-c7249f623635",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        2592,
+        576
+      ],
+      "id": "4153e83e-1633-45c4-bb64-c7a508534ce3",
+      "name": "Wikipedia"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields').item.json.Email }}",
+        "subject": "=Seja Bem-Vindo(a)  {{ $('Edit Fields').item.json.Nome }}! Estamos muito felizes em ter você aqui!",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2864,
+        400
+      ],
+      "id": "cc33f51f-b724-4769-b677-a3cafcfc25a2",
+      "name": "Send a message1",
+      "webhookId": "889178d7-30e1-4797-b342-577fb8f24b2c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "KWNADafmgu5p8957",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3-70b-8192",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        2320,
+        576
+      ],
+      "id": "a357044d-e15c-403a-ba75-39f2b2c3594d",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "peOmQwgTl6HL5mJu",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Envia uma mensagem personalizada para o novo negócio e cria uma atividade",
+        "height": 416,
+        "width": 1168,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2000,
+        320
+      ],
+      "typeVersion": 1,
+      "id": "666aede3-f091-4fbf-ae31-d71739e67699",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "resource": "lead",
+        "operation": "update",
+        "leadId": "={{ $('Create a lead').item.json.id }}",
+        "updateFields": {
+          "title": "=Desqualificado - {{ $('Edit Fields').item.json.Empresa }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        1616,
+        -352
+      ],
+      "id": "eddee403-b89c-4ad5-9f19-e15d7365dfc4",
+      "name": "Update a lead",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "Pued9g5BxINqIZjZ",
+          "name": "Pipedrive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "organization",
+        "operation": "search",
+        "limit": 1,
+        "term": "={{ $('Edit Fields').item.json.CNPJ}}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        816,
+        -144
+      ],
+      "id": "972270aa-8671-4f6d-9ccb-ed733122b0f5",
+      "name": "Search an organization1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "pipedriveApi": {
+          "id": "Pued9g5BxINqIZjZ",
+          "name": "Pipedrive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "901070ec-6933-4288-8fbf-543bb11e0591",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "a670fb4d-901c-4e1d-beae-0d3b9a5f1de9",
+              "name": "lead",
+              "value": "={{ $('Create a lead').item.json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {
+          "dotNotation": true
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1024,
+        -144
+      ],
+      "id": "3aa2bcb0-549c-403e-bb2b-c7859ec6acc4",
+      "name": "Id_organization"
+    },
+    {
+      "parameters": {
+        "resource": "lead",
+        "operation": "update",
+        "leadId": "={{ $('Create a lead').item.json.id }}",
+        "updateFields": {
+          "title": "={{ $('Edit Fields').item.json.Empresa }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        1952,
+        -160
+      ],
+      "id": "3327d3b2-deb4-4632-b80e-ea3f39224367",
+      "name": "Update a lead1",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "Pued9g5BxINqIZjZ",
+          "name": "Pipedrive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "activity",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', `Aqui você CRIAR obrigatoriamente uma nova atividade para o time operacional, será marcada uma reunião e você DEVE obrigatoriamente PASSAR TODAS as informações que tem do lead`, 'string') }}",
+        "type": "Reunião",
+        "additionalFields": {
+          "org_id": "={{ $('Id_organization').item.json.id }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedriveTool",
+      "typeVersion": 1,
+      "position": [
+        2880,
+        576
+      ],
+      "id": "b977b4ff-d076-442b-8282-3fbd75932b99",
+      "name": "atividade",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "Pued9g5BxINqIZjZ",
+          "name": "Pipedrive account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Search an organization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a deal": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Update a lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a deal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a lead": {
+      "main": [
+        [
+          {
+            "node": "Search an organization1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an organization": {
+      "main": [
+        [
+          {
+            "node": "Create a lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message and wait for response": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Update a lead1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing": {
+      "main": [
+        []
+      ]
+    },
+    "Search an organization": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Create a lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create an organization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Search an organization1": {
+      "main": [
+        [
+          {
+            "node": "Id_organization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a lead": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Id_organization": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a lead1": {
+      "main": [
+        [
+          {
+            "node": "Create a deal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "atividade": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "36350f3b-026e-48a4-a8c6-54f7d114605c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2cdd5bf201ed8cc4639f15d6766b89eebb929e84009ffec0b9d93c57f530706e"
+  },
+  "id": "iiGLNyG54P5fVw9d",
+  "tags": [
+    {
+      "createdAt": "2025-08-03T15:25:16.761Z",
+      "updatedAt": "2025-08-03T15:25:16.761Z",
+      "id": "e12K7h48c6lJRgZc",
+      "name": "Projetos"
+    }
+  ]
+}
