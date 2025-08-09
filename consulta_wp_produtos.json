@@ -1,0 +1,144 @@
+{
+  "name": "consulta_wp_produtos",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -80,
+        0
+      ],
+      "id": "fccee80b-d81b-44b2-afbb-eb57130677b1",
+      "name": "Quando a IA chamar"
+    },
+    {
+      "parameters": {
+        "url": "https://jedecormdf.huntingsales.com.br/wp-json/wc/v3/products?consumer_key=ck_423eb0ec4fd213bd3226fd2213397aa9687476d8&consumer_secret=cs_a63710a9c99176b4f52ed3c7776b898c5af2cf68",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        140,
+        0
+      ],
+      "id": "b06b305c-af2e-4909-85f1-712bf1949295",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "205bb92d-4e90-4244-a496-29084167ec0a",
+              "name": "nome",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "387a7c5c-09b9-4897-a2e1-eee62504b1ba",
+              "name": "preco",
+              "value": "={{ $json.price }}",
+              "type": "string"
+            },
+            {
+              "id": "44abff83-e1e5-4616-badf-58d71a09e22f",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "9e8aeac2-d723-417b-bf5c-1e7ddf9bb9e6",
+              "name": "link",
+              "value": "={{ $json.permalink }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        380,
+        0
+      ],
+      "id": "d06e6787-cfd1-4104-8cce-10dada6f248d",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n      \"status\": 200,\n      \"output\": \"Aqui está as informações do produto {{ $json.nome }}: Preço: R$: {{ $json.preco }} e o seu link: {{ $json.link }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        600,
+        0
+      ],
+      "id": "f9826aa1-2d5e-4388-b194-b817d54c4b48",
+      "name": "Retorna Resposta Ao Agente"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Quando a IA chamar": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Retorna Resposta Ao Agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6a20cfca-f8a4-4e69-b1f5-9db36d3e8c3b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e56e512c41d4333ac2a47e98bbdb2f1e1a895f766dd2c4cdc620fcf8b3088f3b"
+  },
+  "id": "58IfPHgAil9cgPC2",
+  "tags": [
+    {
+      "createdAt": "2025-07-23T17:44:07.473Z",
+      "updatedAt": "2025-07-23T17:44:07.473Z",
+      "id": "srTOhk04RWPbfUkf",
+      "name": "Cliente: Emerson"
+    }
+  ]
+}
